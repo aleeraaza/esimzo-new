@@ -18,7 +18,7 @@ import {
   formatData,
   formatPrice,
   pricePerGB,
-} from "@/lib/hooks/use-package-filters";
+} from "@/lib/utils";
 import {
   ArrowDown,
   ArrowUp,
@@ -39,12 +39,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import fiveG from "@/assets/svgs/5g.svg"
+import Link from "next/link";
 
 type Props = {
   plans: Plan[];
   sort: SortOption;
   sortDir: SortDirection;
   onSort: (sort: SortOption) => void;
+  slug: string;
 };
 
 type ColumnSort = {
@@ -59,7 +62,7 @@ const SORTABLE_COLUMNS: ColumnSort[] = [
   { id: "cheapest", label: "Price" },
 ];
 
-export default function PlansTable({ plans, sort, sortDir, onSort }: Props) {
+export default function PlansTable({ plans, sort, sortDir, onSort, slug }: Props) {
   return (
     <div className="mt-4 rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <Table>
@@ -102,10 +105,11 @@ export default function PlansTable({ plans, sort, sortDir, onSort }: Props) {
           {plans.map((plan) => (
             <TableRow
               key={plan.id}
-              className="group cursor-pointer transition-colors hover:bg-accent/30"
+              className="group cursor-pointer transition-colors hover:bg-secondary/10"
             >
               {/* Plan Name + Provider */}
               <TableCell>
+                <Link href={`/${slug}/${plan.provider.slug}`}>
                 <div className="flex items-center gap-3">
                   {plan.provider.image ? (
                     <Image
@@ -116,52 +120,45 @@ export default function PlansTable({ plans, sort, sortDir, onSort }: Props) {
                       className="rounded-md object-contain"
                     />
                   ) : (
-                    <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 text-xs font-bold text-primary">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-md bg-secondary/10 text-xs font-bold text-primary">
                       {plan.provider.name.charAt(0)}
                     </div>
                   )}
                   <div className="min-w-0">
+                    <p className="text-sm font-bold text-muted-foreground">
+                      {plan.provider.name}
+                    </p>
                     <p className="truncate text-sm font-medium text-foreground">
                       {plan.name}
                       {plan.has5G && (
                         <span className="ml-1.5 inline-flex items-center">
-                          <Signal className="h-3 w-3 text-green-500" />
+                          <Image src={fiveG} alt="5G" width={20} height={20} /> 
                         </span>
                       )}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      {plan.provider.name}
-                    </p>
                   </div>
                 </div>
+                </Link>
               </TableCell>
 
               {/* Data */}
               <TableCell>
+                <Link href={`/${slug}/${plan.provider.slug}`}>
                 <div className="flex items-center gap-1">
                   <span className="text-sm font-semibold text-foreground">
                     {formatData(plan.capacity)}
                   </span>
-                  {plan.capacity <= 0 && (
-                    <TooltipProvider delayDuration={200}>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Info className="h-3 w-3 text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="text-xs">Unlimited data plan</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
+                 
                 </div>
+                </Link>
               </TableCell>
 
               {/* Validity */}
               <TableCell>
+                <Link href={`/${slug}/${plan.provider.slug}`}>
                 <div className="flex items-center gap-1">
-                  <span className="text-sm text-foreground">
-                    {plan.period} Days
+                  <span className="text-sm font-medium text-foreground">
+                    {plan.period} {plan.period === 1 ? "Day" : "Days"}
                   </span>
                   {plan.isConsecutive && (
                     <TooltipProvider delayDuration={200}>
@@ -178,17 +175,21 @@ export default function PlansTable({ plans, sort, sortDir, onSort }: Props) {
                     </TooltipProvider>
                   )}
                 </div>
+                </Link>
               </TableCell>
 
               {/* Price/GB */}
               <TableCell>
-                <span className="text-sm text-muted-foreground">
+                <Link href={`/${slug}/${plan.provider.slug}`}>
+                <span className="text-sm font-medium text-muted-foreground">
                   {pricePerGB(plan.usdPrice, plan.capacity)}
                 </span>
+                </Link>
               </TableCell>
 
               {/* Price */}
               <TableCell>
+                <Link href={`/${slug}/${plan.provider.slug}`}>
                 <span
                   className={cn(
                     "text-sm font-bold",
@@ -197,10 +198,12 @@ export default function PlansTable({ plans, sort, sortDir, onSort }: Props) {
                 >
                   {formatPrice(plan.usdPrice)}
                 </span>
+                </Link>
               </TableCell>
 
               {/* Tags */}
               <TableCell>
+                <Link href={plan.provider.slug}>
                 <div className="flex flex-wrap gap-1">
                   {plan.payAsYouGo && (
                     <Badge
@@ -248,6 +251,7 @@ export default function PlansTable({ plans, sort, sortDir, onSort }: Props) {
                     </Badge>
                   )}
                 </div>
+                </Link>
               </TableCell>
             </TableRow>
           ))}

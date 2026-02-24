@@ -31,6 +31,7 @@ function PlansContent({ slug, initialData }: Props) {
           sort={filters.sort}
           sortDir={filters.sortDir}
           onSort={filters.toggleColumnSort}
+          slug={slug}
         />
       ) : (
         <NoFilterResults onClear={filters.clearAll} />
