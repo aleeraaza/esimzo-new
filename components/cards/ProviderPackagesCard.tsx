@@ -10,7 +10,7 @@ import { formatData, formatPrice } from '@/lib/utils';
 export const ProviderPackagesCard = ({data}: {data: Plan}) => {
     const {name, capacity, usdPrice, period} = data;
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:shadow-md hover:border-primary/50">
+    <div className="group relative xl:max-w-4xl overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:shadow-md hover:border-primary/50">
       {/* Title Header */}
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
