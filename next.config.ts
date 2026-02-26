@@ -15,6 +15,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "wsacvimipplrlvoyawam.supabase.co",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

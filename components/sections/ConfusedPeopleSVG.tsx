@@ -18,6 +18,43 @@ export default function ConfusedPeopleSVG() {
       className="w-full h-full"
       aria-label="Two people comparing eSIM plans on a large phone"
     >
+      {/* Define gradients for depth and realism */}
+      <defs>
+        <linearGradient id="skinGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style={{ stopColor: "#FCC9A3", stopOpacity: 1 }} />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#F5B89B", stopOpacity: 1 }}
+          />
+        </linearGradient>
+        <linearGradient id="skinGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style={{ stopColor: "#F5D4B0", stopOpacity: 1 }} />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#E8C5A8", stopOpacity: 1 }}
+          />
+        </linearGradient>
+        <radialGradient id="skinShadow1" cx="30%" cy="30%">
+          <stop
+            offset="0%"
+            style={{ stopColor: "#FFFFFF", stopOpacity: 0.3 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#A0643D", stopOpacity: 0.1 }}
+          />
+        </radialGradient>
+        <radialGradient id="hairShadow1" cx="40%" cy="40%">
+          <stop
+            offset="0%"
+            style={{ stopColor: "#B8540F", stopOpacity: 0.4 }}
+          />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#5F2C0C", stopOpacity: 0.8 }}
+          />
+        </radialGradient>
+      </defs>
       {/* ══════════════════════════════════════
           WOMAN — left side, leaning toward phone
       ══════════════════════════════════════ */}
@@ -33,11 +70,38 @@ export default function ConfusedPeopleSVG() {
         />
 
         {/* ── Legs ── */}
-        <rect x="48" y="460" width="13" height="55" rx="6" fill="#CBD5E1" />
-        <rect x="68" y="460" width="13" height="55" rx="6" fill="#CBD5E1" />
+        <defs>
+          <linearGradient id="legGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop
+              offset="0%"
+              style={{ stopColor: "#B0C4DE", stopOpacity: 1 }}
+            />
+            <stop
+              offset="100%"
+              style={{ stopColor: "#9FBAD9", stopOpacity: 1 }}
+            />
+          </linearGradient>
+        </defs>
+        <rect
+          x="48"
+          y="460"
+          width="13"
+          height="55"
+          rx="6"
+          fill="url(#legGrad)"
+        />
+        <rect
+          x="68"
+          y="460"
+          width="13"
+          height="55"
+          rx="6"
+          fill="url(#legGrad)"
+        />
         {/* Shoes */}
-        <ellipse cx="54" cy="517" rx="14" ry="7" fill="#334155" />
-        <ellipse cx="74" cy="517" rx="14" ry="7" fill="#334155" />
+        <ellipse cx="54" cy="517" rx="14" ry="7" fill="#1A1F2E" />
+        <ellipse cx="74" cy="517" rx="14" ry="7" fill="#1A1F2E" />
+        <ellipse cx="54" cy="516" rx="12" ry="5" fill="#2D3748" />
 
         {/* ── Body ── */}
         <rect
@@ -145,58 +209,95 @@ export default function ConfusedPeopleSVG() {
             calcMode="spline"
             keySplines="0.4 0 0.6 1;0 0 1 1;0.4 0 0.6 1"
           />
-          {/* Hair */}
-          <ellipse cx="62" cy="340" rx="28" ry="16" fill="#92400E" />
-          <ellipse cx="40" cy="354" rx="10" ry="24" fill="#92400E" />
-          <ellipse cx="84" cy="353" rx="9" ry="22" fill="#92400E" />
-          {/* Face */}
-          <circle cx="62" cy="358" r="26" fill="#FBBF7A" />
-          {/* Eyes with blink */}
-          <ellipse cx="52" cy="356" rx="4" ry="4.5" fill="white">
+          {/* Hair base with gradient */}
+          <ellipse cx="62" cy="340" rx="28" ry="16" fill="url(#hairShadow1)" />
+          <ellipse cx="62" cy="340" rx="26" ry="15" fill="#9D4E0B" />
+          <ellipse cx="40" cy="354" rx="10" ry="24" fill="#7A3D08" />
+          <ellipse cx="84" cy="353" rx="9" ry="22" fill="#7A3D08" />
+          {/* Hair highlight */}
+          <ellipse
+            cx="68"
+            cy="336"
+            rx="8"
+            ry="6"
+            fill="#B8540F"
+            opacity="0.6"
+          />
+
+          {/* Face with gradient */}
+          <circle cx="62" cy="358" r="26" fill="url(#skinGradient1)" />
+          <circle cx="62" cy="358" r="26" fill="url(#skinShadow1)" />
+
+          {/* Nose definition */}
+          <ellipse
+            cx="62"
+            cy="362"
+            rx="3"
+            ry="5"
+            fill="#E8A89C"
+            opacity="0.6"
+          />
+
+          {/* Eyes - confused/uncertain expression */}
+          <ellipse cx="52" cy="352" rx="5.5" ry="6.5" fill="white">
             <animate
               attributeName="ry"
-              values="4.5;4.5;0.3;4.5;4.5"
+              values="6.5;6.5;0.5;6.5;6.5"
               keyTimes="0;0.85;0.92;0.97;1"
               dur="4s"
               repeatCount="indefinite"
             />
           </ellipse>
-          <circle cx="52" cy="357" r="2.5" fill="#1E293B" />
-          <circle cx="53" cy="356" r="0.8" fill="white" />
-          <ellipse cx="72" cy="356" rx="4" ry="4.5" fill="white">
+          {/* Eye iris looking down and uncertain */}
+          <circle cx="50" cy="354" r="3.5" fill="#6B4423" />
+          <circle cx="50" cy="355" r="2" fill="#1E293B" />
+          <circle cx="50.5" cy="353" r="0.9" fill="white" />
+
+          <ellipse cx="72" cy="352" rx="5.5" ry="6.5" fill="white">
             <animate
               attributeName="ry"
-              values="4.5;4.5;0.3;4.5;4.5"
+              values="6.5;6.5;0.5;6.5;6.5"
               keyTimes="0;0.85;0.92;0.97;1"
               dur="4s"
               repeatCount="indefinite"
               begin="0.05s"
             />
           </ellipse>
-          <circle cx="72" cy="357" r="2.5" fill="#1E293B" />
-          <circle cx="73" cy="356" r="0.8" fill="white" />
-          {/* Brows */}
+          <circle cx="70" cy="354" r="3.5" fill="#6B4423" />
+          <circle cx="70" cy="355" r="2" fill="#1E293B" />
+          <circle cx="70.5" cy="353" r="0.9" fill="white" />
+
+          {/* Confused eyebrows - raised and angled inward */}
           <path
-            d="M46,349 Q52,343 58,348"
-            stroke="#92400E"
-            strokeWidth="2"
+            d="M44,341 Q50,337 56,343"
+            stroke="#6B4423"
+            strokeWidth="2.5"
             strokeLinecap="round"
             fill="none"
           />
           <path
-            d="M66,347 Q72,342 78,348"
-            stroke="#92400E"
-            strokeWidth="2"
+            d="M68,341 Q74,337 80,343"
+            stroke="#6B4423"
+            strokeWidth="2.5"
             strokeLinecap="round"
             fill="none"
           />
-          {/* Smile */}
+
+          {/* Confused mouth - open slightly with uncertain expression */}
           <path
-            d="M54,370 Q62,377 70,370"
+            d="M54,370 Q62,373 70,370"
             stroke="#C2855A"
-            strokeWidth="1.8"
+            strokeWidth="2.2"
             strokeLinecap="round"
             fill="none"
+          />
+          <path
+            d="M58,371 Q62,374 66,371"
+            stroke="#D89876"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            fill="none"
+            opacity="0.7"
           />
         </g>
       </g>
@@ -217,10 +318,37 @@ export default function ConfusedPeopleSVG() {
         />
 
         {/* Legs */}
-        <rect x="398" y="460" width="13" height="55" rx="6" fill="#94A3B8" />
-        <rect x="418" y="460" width="13" height="55" rx="6" fill="#94A3B8" />
-        <ellipse cx="404" cy="517" rx="14" ry="7" fill="#334155" />
-        <ellipse cx="424" cy="517" rx="14" ry="7" fill="#334155" />
+        <defs>
+          <linearGradient id="legGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop
+              offset="0%"
+              style={{ stopColor: "#A8B8D8", stopOpacity: 1 }}
+            />
+            <stop
+              offset="100%"
+              style={{ stopColor: "#96A8CC", stopOpacity: 1 }}
+            />
+          </linearGradient>
+        </defs>
+        <rect
+          x="398"
+          y="460"
+          width="13"
+          height="55"
+          rx="6"
+          fill="url(#legGrad2)"
+        />
+        <rect
+          x="418"
+          y="460"
+          width="13"
+          height="55"
+          rx="6"
+          fill="url(#legGrad2)"
+        />
+        <ellipse cx="404" cy="517" rx="14" ry="7" fill="#1A1F2E" />
+        <ellipse cx="424" cy="517" rx="14" ry="7" fill="#1A1F2E" />
+        <ellipse cx="404" cy="516" rx="12" ry="5" fill="#2D3748" />
 
         {/* Body */}
         <rect
@@ -298,58 +426,96 @@ export default function ConfusedPeopleSVG() {
             calcMode="spline"
             keySplines="0.4 0 0.6 1;0 0 1 1;0.4 0 0.6 1"
           />
-          {/* Hair */}
-          <ellipse cx="412" cy="340" rx="26" ry="14" fill="#78350F" />
-          <ellipse cx="392" cy="349" rx="10" ry="18" fill="#78350F" />
-          <ellipse cx="432" cy="349" rx="10" ry="18" fill="#78350F" />
-          {/* Face */}
-          <circle cx="412" cy="358" r="26" fill="#F5C5A3" />
-          {/* Eyes */}
-          <ellipse cx="402" cy="356" rx="4" ry="4.5" fill="white">
+          {/* Hair with gradient */}
+          <ellipse cx="412" cy="340" rx="26" ry="14" fill="url(#hairShadow1)" />
+          <ellipse cx="412" cy="340" rx="24" ry="13" fill="#7D3F08" />
+          <ellipse cx="392" cy="349" rx="10" ry="18" fill="#5F2C0C" />
+          <ellipse cx="432" cy="349" rx="10" ry="18" fill="#5F2C0C" />
+          {/* Hair highlight */}
+          <ellipse
+            cx="420"
+            cy="336"
+            rx="7"
+            ry="5"
+            fill="#A0540F"
+            opacity="0.5"
+          />
+
+          {/* Face with gradient */}
+          <circle cx="412" cy="358" r="26" fill="url(#skinGradient2)" />
+          <circle cx="412" cy="358" r="26" fill="url(#skinShadow1)" />
+
+          {/* Nose definition */}
+          <ellipse
+            cx="412"
+            cy="362"
+            rx="3.5"
+            ry="5.5"
+            fill="#D99B88"
+            opacity="0.5"
+          />
+
+          {/* Eyes - very confused and uncertain */}
+          <ellipse cx="402" cy="350" rx="6" ry="7" fill="white">
             <animate
               attributeName="ry"
-              values="4.5;4.5;0.3;4.5;4.5"
+              values="7;7;0.5;7;7"
               keyTimes="0;0.80;0.88;0.94;1"
               dur="4.5s"
               repeatCount="indefinite"
             />
           </ellipse>
-          <circle cx="402" cy="357" r="2.5" fill="#1E293B" />
-          <circle cx="403" cy="356" r="0.8" fill="white" />
-          <ellipse cx="422" cy="356" rx="4" ry="4.5" fill="white">
+          {/* Eye iris - looking up confused */}
+          <circle cx="401" cy="348" r="3.8" fill="#5B3A2B" />
+          <circle cx="401" cy="348" r="2.2" fill="#1E293B" />
+          <circle cx="401.6" cy="347" r="1" fill="white" />
+
+          <ellipse cx="422" cy="350" rx="6" ry="7" fill="white">
             <animate
               attributeName="ry"
-              values="4.5;4.5;0.3;4.5;4.5"
+              values="7;7;0.5;7;7"
               keyTimes="0;0.80;0.88;0.94;1"
               dur="4.5s"
               repeatCount="indefinite"
               begin="0.05s"
             />
           </ellipse>
-          <circle cx="422" cy="357" r="2.5" fill="#1E293B" />
-          <circle cx="423" cy="356" r="0.8" fill="white" />
-          {/* Brows */}
+          <circle cx="423" cy="348" r="3.8" fill="#5B3A2B" />
+          <circle cx="423" cy="348" r="2.2" fill="#1E293B" />
+          <circle cx="423.6" cy="347" r="1" fill="white" />
+
+          {/* Confused/skeptical eyebrows - inner raised, outer lower */}
           <path
-            d="M396,347 Q402,342 408,348"
-            stroke="#78350F"
-            strokeWidth="2"
+            d="M394,339 Q402,334 410,342"
+            stroke="#5B3A2B"
+            strokeWidth="2.8"
             strokeLinecap="round"
             fill="none"
           />
           <path
-            d="M416,348 Q422,343 428,349"
-            stroke="#78350F"
-            strokeWidth="2"
+            d="M414,342 Q422,334 430,339"
+            stroke="#5B3A2B"
+            strokeWidth="2.8"
             strokeLinecap="round"
             fill="none"
           />
-          {/* Thinking mouth */}
+
+          {/* Confused/uncertain mouth - tilted, slightly open */}
           <path
-            d="M404,370 Q408,374 412,370 Q416,366 420,370"
-            stroke="#C2855A"
-            strokeWidth="1.8"
+            d="M406,369 Q412,366 418,369"
+            stroke="#C8947A"
+            strokeWidth="2.2"
             strokeLinecap="round"
             fill="none"
+          />
+          {/* Lower lip line */}
+          <path
+            d="M406,372 Q412,375 418,372"
+            stroke="#D9A594"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            fill="none"
+            opacity="0.6"
           />
         </g>
       </g>
@@ -563,27 +729,6 @@ export default function ConfusedPeopleSVG() {
           strokeWidth="1.5"
           opacity="0.5"
         />
-
-        {/* BEST badge */}
-        <rect
-          x="300"
-          y="191"
-          width="32"
-          height="14"
-          rx="7"
-          style={{ fill: P }}
-        />
-        <text
-          x="316"
-          y="201"
-          textAnchor="middle"
-          fontFamily="system-ui,sans-serif"
-          fontSize="7"
-          fontWeight="700"
-          fill="white"
-        >
-          BEST
-        </text>
 
         {/* Provider icon */}
         <circle

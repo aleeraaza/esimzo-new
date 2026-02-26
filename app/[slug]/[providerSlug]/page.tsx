@@ -1,23 +1,16 @@
 import { ProviderPackagesCard } from "@/components/cards/ProviderPackagesCard";
 import { ProviderDetails } from "@/components/sections/ProviderDetails";
 import ProviderPackageHeader from "@/components/sections/ProviderPackageHeader";
-import {
-  getCountryCode,
-  getProviderBySearchParams,
-} from "@/lib/services/plans/plans.services";
+import { getProviderBySearchParams } from "@/lib/services/plans/plans.services";
 import React from "react";
 
 type PropType = {
-  params: {
-    slug: Promise<string>;
-    providerSlug: Promise<string>;
-  };
+  params: Promise<{ slug: string; providerSlug: string }>;
 };
 
 export default async function page({ params }: PropType) {
   const { slug, providerSlug } = await params;
-  const countryCode = await getCountryCode(slug);
-  const data = await getProviderBySearchParams(countryCode, providerSlug);
+  const data = await getProviderBySearchParams(slug, providerSlug);
 
   return (
     <main className="container py-8 flex flex-col gap-8">
@@ -26,7 +19,6 @@ export default async function page({ params }: PropType) {
 
       {/* Main Grid Content */}
       <section className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-8 items-start">
-        
         {/* Left Side: Sticky Details */}
         <aside className="xl:sticky xl:top-24">
           <ProviderDetails />
@@ -39,7 +31,6 @@ export default async function page({ params }: PropType) {
             <ProviderPackagesCard key={item.id} data={item} />
           ))}
         </div>
-        
       </section>
     </main>
   );

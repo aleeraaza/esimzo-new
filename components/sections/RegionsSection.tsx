@@ -1,6 +1,8 @@
 import { getRegions } from "@/lib/services/plans/plans.services";
 import CountryCard from "../cards/CountryCard";
 import ExpandableGrid from "../cards/ExpandableGrid";
+import RegionCard from "../cards/RegionCard";
+import Image from "next/image";
 
 const VISIBLE_COUNT = 15;
 
@@ -10,12 +12,28 @@ export default async function RegionsSection() {
   return (
     <section id="regions" className="bg-background py-10">
       <div className="container">
+        <h2 className="text-center text-xl font-bold tracking-tight text-foreground mb-6">
+          Explore Regions
+        </h2>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {regions.slice(0, 14).map((region) => (
+            <RegionCard key={region.id} region={region} />
+          ))}
+        </div>
         <div className="flex flex-col gap-12">
           {regions.map((region) => (
             <div key={region.id}>
               {/* Region heading */}
-              <div className="mb-6 flex items-center justify-center gap-3">
-                <span className="text-3xl">{region.flag}</span>
+              <div className="my-6 flex items-center justify-center gap-3">
+                <div className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md">
+                  <Image
+                    src={region.flag}
+                    alt={region.name}
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                  />
+                </div>
                 <h2 className="text-center text-xl font-bold tracking-tight text-foreground">
                   {region.name}
                 </h2>

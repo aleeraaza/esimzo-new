@@ -7,10 +7,20 @@ import { api } from "../api";
 
 export async function getCountries() {
   try {
+    const response = await api<GetPopularResponse>("/countries");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all countries:", error);
+    return [];
+  }
+}
+export async function getPopularCountries() {
+  try {
     const response = await api<GetPopularResponse>("/countries/popular");
     return response.data;
   } catch (error) {
-    throw error;
+    console.error("Error fetching popular countries:", error);
+    return [];
   }
 }
 
@@ -19,40 +29,46 @@ export async function getRegions() {
     const response = await api<GetRegionsResponse>("/regions");
     return response.data;
   } catch (error) {
-    throw error;
+    console.error("Error fetching regions:", error);
+    return [];
   }
 }
 
-export async function getCountryBySlug(slug: string) {
+export async function getRegionalPackagesBySlug(slug: string) {
+  try {
+    const response = await api<GetCountrySlugResponse>(
+      `/regions/${slug}/plans`,
+    );
+    return response.data || [];
+  } catch (error) {
+    console.error(`Error fetching regional packages for slug ${slug}:`, error);
+    return [];
+  }
+}
+
+export async function getCountryPackagesBySlug(slug: string) {
   try {
     const response = await api<GetCountrySlugResponse>(
       `/countries/${slug}/plans`,
     );
-    return response.data;
+    return response.data || [];
   } catch (error) {
-    throw error;
+    console.error(`Error fetching country packages for slug ${slug}:`, error);
+    return [];
   }
-}
-export async function getCountryCode(slug: Promise<string>) {
-  const countryRes = await fetch(
-    `https://restcountries.com/v3.1/name/${slug}?fullText=true`,
-  );
-  const countryData = await countryRes.json();
-
-  const countryCode = countryData[0]?.cca2;
-  return countryCode;
 }
 
 export async function getProviderBySearchParams(
   countryCode: string,
-  providerSlug: Promise<string>,
+  providerSlug: string,
 ) {
   try {
     const response = await api<GetCountrySlugResponse>(
       `/plans?country=${countryCode}&provider=${providerSlug}`,
     );
-    return response.data;
+    return response.data || [];
   } catch (error) {
-    throw error;
+    console.error(`Error fetching provider by search params:`, error);
+    return [];
   }
 }
