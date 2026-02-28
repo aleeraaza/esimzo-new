@@ -1,21 +1,20 @@
 import { ProviderPackagesCard } from "@/components/cards/ProviderPackagesCard";
 import { ProviderDetails } from "@/components/sections/ProviderDetails";
 import ProviderPackageHeader from "@/components/sections/ProviderPackageHeader";
-import { getProviderBySearchParams } from "@/lib/services/plans/plans.services";
-import React from "react";
+import { getGlobalPackagesBySlug } from "@/lib/services/plans/plans.services";
 
 type PropType = {
-  params: Promise<{ slug: string; providerSlug: string }>;
+  params: Promise<{ slug: string }>;
 };
 
 export default async function page({ params }: PropType) {
-  const { slug, providerSlug } = await params;
-  const data = await getProviderBySearchParams(slug, providerSlug);
+  const { slug } = await params;
+  const data = await getGlobalPackagesBySlug(slug);
 
   return (
     <main className="container py-8 flex flex-col gap-8">
       {/* Header spanning full width */}
-      <ProviderPackageHeader providerName={providerSlug} countryName={slug} />
+      <ProviderPackageHeader providerName={slug} countryName={"Global"} />
 
       {/* Main Grid Content */}
       <section className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-8 items-start">

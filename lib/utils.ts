@@ -13,7 +13,7 @@ export function formatData(capacityMB: number): string {
 }
 
 export function formatPrice(usd: number): string {
-  return `$${usd.toFixed(2)}`;
+  return `$${usd}`;
 }
 
 export function pricePerGB(usd: number, capacityMB: number): string {

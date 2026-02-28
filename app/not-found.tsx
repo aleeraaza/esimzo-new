@@ -1,8 +1,14 @@
-import Link from "next/link";
+import SearchList from "@/components/search/SearchList";
+import FluffyAnimal from "@/components/sections/FluffyAnimal";
 import { ArrowLeft, Wifi } from "lucide-react";
-import FluffyAnimal from "./FluffyAnimal";
+import Link from "next/link";
 
-export default function NoPackagesState() {
+export const metadata = {
+  title: "404 - Page Not Found",
+  description: "The page you are looking for does not exist.",
+};
+
+export default function NotFound() {
   return (
     <section className="relative overflow-hidden bg-linear-to-br from-background via-secondary/40 to-background py-20">
       {/* Inline keyframes for custom animations */}
@@ -44,39 +50,22 @@ export default function NoPackagesState() {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           {/* ── Left: Messaging ── */}
           <div className="flex flex-col items-center gap-6 text-center lg:items-start lg:text-left">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-semibold text-muted-foreground shadow-sm">
-              <Wifi className="h-3.5 w-3.5 text-primary" />
-              Coverage Expanding
-            </div>
-
-            {/* Heading */}
             <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
-              No packages{" "}
               <span className="relative inline-block">
-                <span className="relative z-10 text-primary">found yet</span>
+                <span className="relative z-10 text-primary">Oops!</span>
                 <span className="absolute inset-x-0 bottom-1 -z-10 h-3 rounded-sm bg-accent" />
-              </span>
+              </span>{" "}
+              Page Not Found
             </h1>
 
             {/* Description */}
-            <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">
-              We&apos;re actively working to bring eSIM plans to this
-              destination. Our coverage is expanding to{" "}
-              <span className="font-semibold text-foreground">
-                190+ countries
-              </span>{" "}
-              — check back soon or explore our other popular destinations.
+            <p className="max-w-xl text-lg leading-relaxed text-muted-foreground">
+              Looks like the page you're looking for doesn't exist anymore — or
+              maybe it never did. But don’t worry, we’re here to keep you
+              connected. Let’s get you back on track!
             </p>
 
-            {/* Coming Soon Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-accent px-4 py-2 text-sm font-semibold text-primary">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
-              </span>
-              Coming Soon
-            </div>
+            <SearchList variant="bar" />
 
             {/* CTA */}
             <Link

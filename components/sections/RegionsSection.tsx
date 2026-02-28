@@ -2,6 +2,7 @@ import { getRegions } from "@/lib/services/plans/plans.services";
 import CountryCard from "../cards/CountryCard";
 import ExpandableGrid from "../cards/ExpandableGrid";
 import RegionCard from "../cards/RegionCard";
+import GlobalRegionCard from "../cards/GlobalRegionCard";
 import Image from "next/image";
 
 const VISIBLE_COUNT = 15;
@@ -19,6 +20,7 @@ export default async function RegionsSection() {
           {regions.slice(0, 14).map((region) => (
             <RegionCard key={region.id} region={region} />
           ))}
+          <GlobalRegionCard />
         </div>
         <div className="flex flex-col gap-12">
           {regions.map((region) => (

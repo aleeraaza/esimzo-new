@@ -9,7 +9,6 @@ type PropType = {
 
 export default function RegionCard({ region }: PropType) {
   const { name, flag, slug } = region;
-  console.log(flag);
 
   return (
     <Link

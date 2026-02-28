@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/sections/Navbar";
 import Footer from "@/components/sections/Footer";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import NavWrapper from "@/components/getters/NavWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +34,7 @@ export default function RootLayout({
       >
         <QueryProvider>
           <NuqsAdapter>
-            <Navbar />
+            <NavWrapper />
             <main className="flex-grow">{children}</main>
             <Footer />
           </NuqsAdapter>

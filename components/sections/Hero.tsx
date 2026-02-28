@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Search, Zap, Wifi, Shield } from "lucide-react";
+import { Zap, Wifi, Shield } from "lucide-react";
 import ConfusedPeopleSVG from "./ConfusedPeopleSVG";
+import SearchList from "@/components/search/SearchList";
 
 const popularDestinations = [
   { flag: "🇫🇷", name: "France" },
@@ -21,7 +22,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden bg-linear-to-br from-background via-secondary/40 to-background pt-20 pb-20"
+      className="relative overflow-hidden bg-gradient-to-b from-secondary/40 via-secondary/40 to-background py-10"
     >
       <div className="container relative">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -48,22 +49,7 @@ export default function Hero() {
 
             {/* Search bar */}
             <div className="w-full max-w-xl">
-              <div className="flex items-center gap-2 rounded-2xl border border-border bg-card p-1.5 shadow-lg shadow-muted/50 focus-within:border-primary focus-within:ring-2 focus-within:ring-accent transition-all">
-                <Search className="ml-2 h-4 w-4 shrink-0 text-muted-foreground" />
-                <input
-                  id="hero-search-input"
-                  type="text"
-                  placeholder="Search by country or region…"
-                  className="flex-1 bg-transparent py-2 text-sm text-foreground placeholder-muted-foreground outline-none"
-                />
-                <Link
-                  href="#plans"
-                  id="hero-search-btn"
-                  className="rounded-xl bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 active:scale-95"
-                >
-                  Search
-                </Link>
-              </div>
+              <SearchList variant="bar" />
 
               {/* Popular tags */}
               <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -79,25 +65,12 @@ export default function Hero() {
                 ))}
               </div>
             </div>
-
-            {/* CTA link */}
-            <Link
-              href="#plans"
-              id="hero-discover-btn"
-              className="group flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 hover:shadow-xl hover:shadow-primary/20 active:scale-95"
-            >
-              Discover eSIM plans
-              <span className="inline-block transition-transform group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
           </div>
 
           {/* ── Right: SVG illustration ── */}
           <div className="relative flex items-center justify-center lg:justify-end">
             {/* Soft glow behind illustration */}
             <div className="absolute inset-0 m-auto h-[360px] w-[360px] rounded-full bg-linear-to-br from-accent to-secondary opacity-40 blur-3xl" />
-
             <div className="relative z-10 w-full max-w-lg">
               <ConfusedPeopleSVG />
             </div>

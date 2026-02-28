@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/tooltip";
 import fiveG from "@/assets/svgs/5g.svg";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Props = {
   plans: Plan[];
@@ -65,6 +66,8 @@ export default function PlansTable({
   onSort,
   slug,
 }: Props) {
+  const pathname = usePathname();
+  const isRegional = pathname.startsWith("/region");
   return (
     <div className="mt-4 rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <Table>
@@ -111,7 +114,13 @@ export default function PlansTable({
             >
               {/* Plan Name + Provider */}
               <TableCell>
-                <Link href={`/${slug}/${plan.provider.slug}`}>
+                <Link
+                  href={
+                    isRegional
+                      ? `/region/${slug}/${plan.provider.slug}`
+                      : `/${slug}/${plan.provider.slug}`
+                  }
+                >
                   <div className="flex items-center gap-3">
                     {plan.provider.image ? (
                       <div className="relative h-10 w-10">
@@ -151,7 +160,13 @@ export default function PlansTable({
 
               {/* Data */}
               <TableCell>
-                <Link href={`/${slug}/${plan.provider.slug}`}>
+                <Link
+                  href={
+                    isRegional
+                      ? `/region/${slug}/${plan.provider.slug}`
+                      : `/${slug}/${plan.provider.slug}`
+                  }
+                >
                   <div className="flex items-center gap-1">
                     <span className="text-sm font-semibold text-foreground">
                       {formatData(plan.capacity)}
@@ -162,7 +177,13 @@ export default function PlansTable({
 
               {/* Validity */}
               <TableCell>
-                <Link href={`/${slug}/${plan.provider.slug}`}>
+                <Link
+                  href={
+                    isRegional
+                      ? `/region/${slug}/${plan.provider.slug}`
+                      : `/${slug}/${plan.provider.slug}`
+                  }
+                >
                   <div className="flex items-center gap-1">
                     <span className="text-sm font-medium text-foreground">
                       {plan.period} {plan.period === 1 ? "Day" : "Days"}
@@ -187,7 +208,13 @@ export default function PlansTable({
 
               {/* Price/GB */}
               <TableCell>
-                <Link href={`/${slug}/${plan.provider.slug}`}>
+                <Link
+                  href={
+                    isRegional
+                      ? `/region/${slug}/${plan.provider.slug}`
+                      : `/${slug}/${plan.provider.slug}`
+                  }
+                >
                   <span className="text-sm font-medium text-muted-foreground">
                     {pricePerGB(plan.usdPrice, plan.capacity)}
                   </span>
@@ -196,7 +223,13 @@ export default function PlansTable({
 
               {/* Price */}
               <TableCell>
-                <Link href={`/${slug}/${plan.provider.slug}`}>
+                <Link
+                  href={
+                    isRegional
+                      ? `/region/${slug}/${plan.provider.slug}`
+                      : `/${slug}/${plan.provider.slug}`
+                  }
+                >
                   <span
                     className={cn(
                       "text-sm font-bold",
@@ -212,7 +245,13 @@ export default function PlansTable({
 
               {/* Tags */}
               <TableCell>
-                <Link href={plan.provider.slug}>
+                <Link
+                  href={
+                    isRegional
+                      ? `/region/${slug}/${plan.provider.slug}`
+                      : `/${slug}/${plan.provider.slug}`
+                  }
+                >
                   <div className="flex flex-wrap gap-1">
                     {plan.payAsYouGo && (
                       <Badge

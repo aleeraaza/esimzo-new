@@ -34,22 +34,10 @@ export async function getRegions() {
   }
 }
 
-export async function getRegionalPackagesBySlug(slug: string) {
-  try {
-    const response = await api<GetCountrySlugResponse>(
-      `/regions/${slug}/plans`,
-    );
-    return response.data || [];
-  } catch (error) {
-    console.error(`Error fetching regional packages for slug ${slug}:`, error);
-    return [];
-  }
-}
-
 export async function getCountryPackagesBySlug(slug: string) {
   try {
     const response = await api<GetCountrySlugResponse>(
-      `/countries/${slug}/plans`,
+      `/plans/country/${slug}`,
     );
     return response.data || [];
   } catch (error) {
@@ -58,13 +46,62 @@ export async function getCountryPackagesBySlug(slug: string) {
   }
 }
 
-export async function getProviderBySearchParams(
-  countryCode: string,
+export async function getRegionalPackagesBySlug(slug: string) {
+  try {
+    const response = await api<GetCountrySlugResponse>(`/plans/region/${slug}`);
+    return response.data || [];
+  } catch (error) {
+    console.error(`Error fetching regional packages for slug ${slug}:`, error);
+    return [];
+  }
+}
+export async function getRegionalPackagesByProvider(
+  regionSlug: string,
   providerSlug: string,
 ) {
   try {
     const response = await api<GetCountrySlugResponse>(
-      `/plans?country=${countryCode}&provider=${providerSlug}`,
+      `/plans/region/${regionSlug}/provider/${providerSlug}`,
+    );
+    return response.data || [];
+  } catch (error) {
+    console.error(
+      `Error fetching regional packages for slug ${regionSlug} and provider ${providerSlug}:`,
+      error,
+    );
+    return [];
+  }
+}
+
+export async function getGlobalPackages() {
+  try {
+    const response = await api<GetCountrySlugResponse>(`/plans/global`);
+    return response.data || [];
+  } catch (error) {
+    console.error(`Error fetching global packages:`, error);
+    return [];
+  }
+}
+
+export async function getGlobalPackagesBySlug(slug: string) {
+  try {
+    const response = await api<GetCountrySlugResponse>(
+      `/plans/global/provider/${slug}`,
+    );
+    return response.data || [];
+  } catch (error) {
+    console.error(`Error fetching global packages:`, error);
+    return [];
+  }
+}
+
+export async function getProviderBySearchParams(
+  countrySlug: string,
+  providerSlug: string,
+) {
+  try {
+    const response = await api<GetCountrySlugResponse>(
+      `/plans/country/${countrySlug}/provider/${providerSlug}`,
     );
     return response.data || [];
   } catch (error) {
