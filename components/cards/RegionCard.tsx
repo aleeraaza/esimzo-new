@@ -1,5 +1,5 @@
 import { Region } from "@/lib/types/plans.types";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -13,7 +13,7 @@ export default function RegionCard({ region }: PropType) {
   return (
     <Link
       href={`/region/${slug}`}
-      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/10 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-ring/40 hover:shadow-md hover:shadow-primary/5"
+      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/30"
     >
       {/* Flag Container */}
       <div className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md">
@@ -28,13 +28,22 @@ export default function RegionCard({ region }: PropType) {
 
       {/* Country Name */}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-card-foreground">
+        <p className="truncate text-base font-medium text-card-foreground">
           {name}
         </p>
-      </div>
 
-      {/* Arrow */}
-      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition-all group-hover:translate-x-0.5 group-hover:text-primary" />
+        <div className="flex items-center gap-1">
+          <p className="text-sm font-semibold text-muted-foreground">
+            View Plans
+          </p>
+        </div>
+      </div>
+      <div className="rounded-full bg-muted group-hover:bg-primary p-1">
+        <ChevronRight
+          size={18}
+          className="text-muted-foreground transition-all group-hover:text-background"
+        />
+      </div>
     </Link>
   );
 }

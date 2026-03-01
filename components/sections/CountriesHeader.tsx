@@ -9,7 +9,7 @@ export default function CountriesHeader({ slug }: Props) {
   const countryName = capitalize(slug.replace(/-/g, " "));
 
   return (
-    <section className="relative min-h-[400px] overflow-hidden bg-linear-to-br from-background via-secondary/20 to-background flex items-center">
+    <section className="relative min-h-[400px] overflow-hidden bg-gradient-to-b from-secondary/40 via-secondary/40 to-background flex items-center">
       {/* Dynamic Keyframes */}
       <style>{`
         @keyframes flyToSky {

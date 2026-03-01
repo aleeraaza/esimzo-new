@@ -7,10 +7,10 @@ import Image from "next/image";
 import logo from "@/assets/svgs/logo.svg";
 
 const navLinks = [
-  { label: "What's an eSIM?", href: "#" },
-  { label: "eSIM Plans", href: "#plans" },
-  { label: "Destinations", href: "#destinations" },
-  { label: "Providers", href: "#" },
+  { label: "Home", href: "/" },
+  { label: "eSIM Plans", href: "/plans" },
+  { label: "Global eSIMs", href: "/global" },
+  { label: "Regional eSIMs", href: "/region" },
 ];
 interface NavbarProps {
   searchSlot: React.ReactNode;
@@ -37,14 +37,15 @@ export default function Navbar({ searchSlot, mobileMenuSlot }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Instant route-based background mapping
   const routeBg = useMemo(() => {
-    const routes: Record<string, string> = {
-      "/": "bg-secondary/40",
-      "/about": "bg-blue-500/10",
-      "/plans": "bg-emerald-500/5",
-    };
-    return routes[pathname] || "bg-background";
+    if (pathname === "/") return "bg-secondary/40";
+    if (pathname === "/global") return "bg-secondary/40";
+    if (pathname === "/plans") return "bg-emerald-500/5";
+    if (pathname.split("/").filter(Boolean).length === 1) {
+      return "bg-secondary/40";
+    }
+
+    return "";
   }, [pathname]);
 
   return (
@@ -54,7 +55,7 @@ export default function Navbar({ searchSlot, mobileMenuSlot }: NavbarProps) {
         // Transitions only the background-color and backdrop-filter for smoothness
         "transition-[background-color,backdrop-filter] duration-150 ease-out",
         isScrolled
-          ? "bg-background/30 backdrop-blur-md border-b border-background/20"
+          ? "bg-background/30 shadow-xs backdrop-blur-md border-b border-background/20"
           : routeBg,
       )}
     >
@@ -85,10 +86,10 @@ export default function Navbar({ searchSlot, mobileMenuSlot }: NavbarProps) {
               <span className="absolute inset-x-2 -bottom-px h-0.5 bg-primary scale-x-0 transition-transform group-hover:scale-x-100 origin-left" />
             </Link>
           ))}
+          <div className="hidden md:flex items-center gap-2">{searchSlot}</div>
         </nav>
 
         {/* Desktop CTA — SearchList is a server component so Navbar must be a server component too */}
-        <div className="hidden md:flex items-center gap-2">{searchSlot}</div>
 
         {/* Mobile Menu */}
         {mobileMenuSlot}

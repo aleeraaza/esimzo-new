@@ -26,7 +26,7 @@ type LinkVariant = BaseProps & {
 type Props = ButtonVariant | LinkVariant;
 
 const baseStyles =
-  "group inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold items-center gap-2 rounded-full border border-border hover:bg-secondary/10 px-6 py-2.5 text-sm font-semibold text-background! transition-all hover:border-primary/40 bg-primary hover:text-primary! active:scale-95 disabled:pointer-events-none disabled:opacity-50";
+  "group inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold items-center gap-2 rounded-full border border-border hover:bg-foreground px-6 py-2.5 text-sm font-semibold text-background! transition-all hover:border-background/40 bg-primary hover:text-background! active:scale-95 disabled:pointer-events-none disabled:opacity-50";
 
 export default function PrimaryButton({
   children,

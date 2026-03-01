@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import globe from "@/assets/svgs/globe.png"
+import { ArrowRight, ChevronRight } from "lucide-react";
+import globe from "@/assets/svgs/globe.png";
 import Image from "next/image";
-
 
 type Props = {
   label?: string;
@@ -18,21 +17,25 @@ export default function GlobalRegionCard({
   return (
     <Link
       href={href}
-      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/10 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-ring/40 hover:shadow-md hover:shadow-primary/5"
+      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/30"
     >
-      {/* Globe icon in the same size slot as the flag */}
-     <div className="relative h-12 w-12 shrink-0 flex items-center justify-center">
+      <div className="relative h-12 w-12 shrink-0 flex items-center justify-center">
         <Image src={globe} alt="globe" fill className="object-cover" />
-     </div>
-
-      {/* Label */}
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-card-foreground">{label}</p>
-        <p className="truncate text-xs text-muted-foreground">{description}</p>
       </div>
-
-      {/* Arrow */}
-      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground/40 transition-all group-hover:translate-x-0.5 group-hover:text-primary" />
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-semibold text-card-foreground">
+          {label}
+        </p>
+        <p className="text-sm font-semibold text-muted-foreground">
+          {description}
+        </p>
+      </div>
+      <div className="rounded-full bg-muted group-hover:bg-primary p-1">
+        <ChevronRight
+          size={18}
+          className="text-muted-foreground transition-all group-hover:text-background"
+        />
+      </div>
     </Link>
   );
 }

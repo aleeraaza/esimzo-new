@@ -1,30 +1,27 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   type CarouselApi,
-} from '@/components/ui/carousel';
-import { Provider } from '@/lib/types/providers.types';
-import Image from 'next/image';
-
-
+} from "@/components/ui/carousel";
+import { Provider } from "@/lib/types/providers.types";
+import Image from "next/image";
 
 interface ProvidersCarouselProps {
   providers: Provider[];
 }
 
-
-
-export default function ProvidersCarousel({ providers }: ProvidersCarouselProps) {
+export default function ProvidersCarousel({
+  providers,
+}: ProvidersCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
   const isPaused = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const duplicateProviders = [...providers, ...providers, ...providers];
-
 
   const startAutoplay = useCallback(() => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -53,16 +50,21 @@ export default function ProvidersCarousel({ providers }: ProvidersCarouselProps)
         {/* Heading */}
         <div className="text-center">
           <p className="text-muted-foreground text-sm font-medium">
-            A growing directory of{' '}
-            <span className="font-semibold text-foreground">120+</span> travel eSIM brands
+            A growing directory of{" "}
+            <span className="font-semibold text-foreground">120+</span> travel
+            eSIM brands
           </p>
         </div>
 
         {/* Carousel Container */}
         <div
           className="relative overflow-hidden"
-          onMouseEnter={() => { isPaused.current = true; }}
-          onMouseLeave={() => { isPaused.current = false; }}
+          onMouseEnter={() => {
+            isPaused.current = true;
+          }}
+          onMouseLeave={() => {
+            isPaused.current = false;
+          }}
         >
           {/* Gradient fade overlays */}
           <div className="absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
@@ -71,7 +73,7 @@ export default function ProvidersCarousel({ providers }: ProvidersCarouselProps)
           <Carousel
             setApi={setApi}
             opts={{
-              align: 'start',
+              align: "start",
               loop: true,
               dragFree: true,
               slidesToScroll: 1,
@@ -91,7 +93,7 @@ export default function ProvidersCarousel({ providers }: ProvidersCarouselProps)
                         alt={provider.name}
                         width={64}
                         height={64}
-                        className="w-full h-full object-contain"
+                        className="w-full h-full rounded-lg object-contain"
                       />
                     </div>
                     <p className="text-xs md:text-sm text-muted-foreground group-hover:text-foreground font-medium text-center whitespace-nowrap transition-colors">

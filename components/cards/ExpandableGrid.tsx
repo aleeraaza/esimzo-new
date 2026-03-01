@@ -20,18 +20,26 @@ export default function ExpandableGrid({
 
   return (
     <>
-      <div
-        className="-mt-2 grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-3"
-        style={{
-          /* All cards stay in the DOM for SEO — just clip the overflow */
-          maxHeight: expanded
-            ? "none"
-            : `${Math.ceil(visibleCount / 3) * 68}px`,
-          overflow: "hidden",
-          transition: "max-height 0.4s ease-in-out",
-        }}
-      >
-        {children}
+      {/* Wrapper adds the fade-out mask when collapsed */}
+      <div className="relative">
+        <div
+          className="-mt-2 grid grid-cols-1 gap-3 pt-2 sm:grid-cols-2 lg:grid-cols-3"
+          style={{
+            /* All cards stay in the DOM for SEO — just clip the overflow */
+            maxHeight: expanded
+              ? "none"
+              : `${Math.ceil(visibleCount / 3) * 100}px`,
+            overflow: "hidden",
+            transition: "max-height 0.4s ease-in-out",
+          }}
+        >
+          {children}
+        </div>
+
+        {/* Fade gradient — only shown when collapsed and there is more content */}
+        {hasMore && !expanded && (
+          <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-16 bg-linear-to-t from-background to-transparent" />
+        )}
       </div>
 
       {hasMore && (

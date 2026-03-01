@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Country, Region } from "@/lib/types/plans.types";
 import Image from "next/image";
+import { Button } from "@base-ui/react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Variant = "bar" | "icon";
 
@@ -39,6 +41,7 @@ export function SearchDialog({
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   // Focus input when dialog opens
   useEffect(() => {
@@ -116,15 +119,15 @@ export function SearchDialog({
           </span>
         </button>
       ) : (
-        <button
+        <Button
           type="button"
           onClick={() => setOpen(true)}
           aria-label="Search destinations"
-          className="flex items-center gap-2 border border-foreground rounded-full px-3 py-2 text-foreground cursor-pointer"
+          className="flex items-center gap-2 border border-foreground rounded-full px-4 py-1 text-foreground cursor-pointer hover:bg-foreground hover:text-background transition-colors"
         >
           <Search className="h-4 w-4" />
           <span>Destinations</span>
-        </button>
+        </Button>
       )}
 
       {/* ── Dialog ──────────────────────────────────────────── */}
