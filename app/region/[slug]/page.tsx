@@ -9,12 +9,12 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  const regions = await getRegions();
-  return regions.map((region) => ({
-    slug: region.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   const regions = await getRegions();
+//   return regions.map((region) => ({
+//     slug: region.slug,
+//   }));
+// }
 
 export default async function page({ params }: PageProps) {
   const { slug } = await params;
