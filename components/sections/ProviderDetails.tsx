@@ -93,7 +93,9 @@ export const ProviderDetails = ({
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full px-5 py-3 rounded-full bg-primary/20 cursor-pointer hover:bg-primary/10 text-primary font-semibold text-sm transition-colors"
                 >
-                  {item.name || `Link ${index + 1}`}
+                  {item.name.includes("Plans")
+                    ? item.name
+                    : item.name + " Plans"}
                   <ExternalLink size={15} className="text-primary shrink-0" />
                 </Link>
               </DropdownMenuItem>
