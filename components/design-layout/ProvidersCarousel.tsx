@@ -86,16 +86,13 @@ export default function ProvidersCarousel({
                   key={`${provider.id}-${index}`}
                   className="basis-auto pl-8 md:pl-12 flex-shrink-0"
                 >
-                  <div className="flex flex-col items-center gap-3 group cursor-pointer transition-transform duration-300 hover:scale-110">
-                    <div className="flex items-center justify-center w-16 h-16 rounded-xl bg-card border border-border group-hover:border-primary/40 group-hover:bg-accent transition-colors shadow-sm">
-                      <Image
-                        src={provider.image}
-                        alt={provider.name}
-                        width={64}
-                        height={64}
-                        className="w-full h-full rounded-lg object-contain"
-                      />
-                    </div>
+                  <div className="flex items-center gap-3 group cursor-pointer transition-transform duration-300 hover:scale-110">
+                    <Image
+                      src={provider.image}
+                      alt={provider.name}
+                      width={50}
+                      height={50}
+                    />
                     <p className="text-xs md:text-sm text-muted-foreground group-hover:text-foreground font-medium text-center whitespace-nowrap transition-colors">
                       {provider.name}
                     </p>

@@ -70,7 +70,30 @@ export type Plan = {
   };
 };
 
+export type Provider = {
+  id: string;
+  name: string;
+  slug: string;
+  info: string;
+  image: string;
+  certified: boolean;
+  popularity: number;
+  planCount: number;
+  providerLinks: ProviderLinks[];
+  promoCode: string | null;
+  promoTitle: string | null;
+  promoDiscount: number | null;
+  promoPercentage: boolean;
+};
+
+export type ProviderLinks = {
+  link: string;
+  name: string;
+  type: string;
+};
+
 export type GetCountrySlugResponse = {
   success: boolean;
   data: Plan[];
+  provider: Provider;
 };

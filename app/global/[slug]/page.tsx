@@ -9,7 +9,7 @@ type PropType = {
 
 export default async function page({ params }: PropType) {
   const { slug } = await params;
-  const data = await getGlobalPackagesBySlug(slug);
+  const { data, provider: providerData } = await getGlobalPackagesBySlug(slug);
 
   return (
     <main className="container py-8 flex flex-col gap-8">
@@ -20,7 +20,7 @@ export default async function page({ params }: PropType) {
       <section className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-8 items-start">
         {/* Left Side: Sticky Details */}
         <aside className="xl:sticky xl:top-24">
-          <ProviderDetails />
+          <ProviderDetails provider={providerData} />
           {/* You can add your Promo Code component here later */}
         </aside>
 

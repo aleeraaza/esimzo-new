@@ -63,13 +63,13 @@ export async function getRegionalPackagesByProvider(
     const response = await api<GetCountrySlugResponse>(
       `/plans/region/${regionSlug}/provider/${providerSlug}`,
     );
-    return response.data || [];
+    return { data: response.data, provider: response.provider };
   } catch (error) {
     console.error(
       `Error fetching regional packages for slug ${regionSlug} and provider ${providerSlug}:`,
       error,
     );
-    return [];
+    return { data: [], provider: null };
   }
 }
 
@@ -88,10 +88,10 @@ export async function getGlobalPackagesBySlug(slug: string) {
     const response = await api<GetCountrySlugResponse>(
       `/plans/global/provider/${slug}`,
     );
-    return response.data || [];
+    return { data: response.data, provider: response.provider };
   } catch (error) {
     console.error(`Error fetching global packages:`, error);
-    return [];
+    return { data: [], provider: null };
   }
 }
 
@@ -103,9 +103,9 @@ export async function getProviderBySearchParams(
     const response = await api<GetCountrySlugResponse>(
       `/plans/country/${countrySlug}/provider/${providerSlug}`,
     );
-    return response.data || [];
+    return { data: response.data, provider: response.provider };
   } catch (error) {
     console.error(`Error fetching provider by search params:`, error);
-    return [];
+    return { data: [], provider: null };
   }
 }
