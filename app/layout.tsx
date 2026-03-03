@@ -5,6 +5,7 @@ import Footer from "@/components/sections/Footer";
 import QueryProvider from "@/components/providers/QueryProvider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import NavWrapper from "@/components/getters/NavWrapper";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +33,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex min-h-screen flex-col`}
       >
+        <NextTopLoader color="#F47854" height={3} />
         <QueryProvider>
           <NuqsAdapter>
             <NavWrapper />
-            <main className="flex-grow">{children}</main>
+            <main className="grow">{children}</main>
             <Footer />
           </NuqsAdapter>
         </QueryProvider>
