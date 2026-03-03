@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, X, MapPin, Globe, ChevronRight, Ban } from "lucide-react";
+import { Search, X, ChevronRight, Ban, Globe } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -34,10 +34,6 @@ type MatchedCountry = {
   regionSlug: string;
 };
 
-type MatchedRegion = {
-  region: Region;
-};
-
 export function SearchDialog({
   popularCountries,
   regions,
@@ -45,6 +41,7 @@ export function SearchDialog({
 }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -55,8 +52,15 @@ export function SearchDialog({
       setTimeout(() => inputRef.current?.focus(), 80);
     } else {
       setQuery("");
+      setDebouncedQuery("");
     }
   }, [open]);
+
+  // Debounce: only update the search query 200ms after the user stops typing
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(query), 200);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   // Flat list: every country with its region info
   const allCountriesWithRegion = useMemo<MatchedCountry[]>(
@@ -71,55 +75,112 @@ export function SearchDialog({
     [regions],
   );
 
-  // Search: match by name OR country code (ISO), code startsWith gets priority
-  const { matchedCountries, matchedRegions } = useMemo(() => {
-    if (!query.trim()) return { matchedCountries: [], matchedRegions: [] };
-    const q = query.trim().toLowerCase();
-
-    const countries = allCountriesWithRegion
-      .filter(({ country }) => {
-        const nameMatch = country.name.toLowerCase().includes(q);
-        const codeMatch = country.code.toLowerCase().includes(q);
-        return nameMatch || codeMatch;
-      })
-      .sort((a, b) => {
-        // Exact code match first, then code startsWith, then name startsWith, then rest
-        const score = (c: Country) => {
-          const code = c.code.toLowerCase();
-          const name = c.name.toLowerCase();
-          if (code === q) return 0;
-          if (code.startsWith(q)) return 1;
-          if (name.startsWith(q)) return 2;
-          return 3;
+  const { matchedCountries, directMatchedRegions, alsoInRegions } =
+    useMemo(() => {
+      if (!debouncedQuery.trim())
+        return {
+          matchedCountries: [],
+          directMatchedRegions: [],
+          alsoInRegions: [],
         };
-        return score(a.country) - score(b.country);
-      });
 
-    // Deduplicated regions from the matched countries
-    const regionMap = new Map<string, MatchedRegion>();
-    for (const { regionSlug } of countries) {
-      if (!regionMap.has(regionSlug)) {
-        const region = regions.find((r) => r.slug === regionSlug);
-        if (region) regionMap.set(regionSlug, { region });
+      const q = debouncedQuery.trim().toLowerCase();
+
+      // ── 1. Direct region matches (by name or code) ─────────────────────────
+      const directRegions = regions
+        .filter((r) => {
+          return (
+            r.name.toLowerCase().includes(q) || r.code.toLowerCase().includes(q)
+          );
+        })
+        .sort((a, b) => {
+          const score = (r: Region) => {
+            const code = r.code.toLowerCase();
+            const name = r.name.toLowerCase();
+            if (code === q || name === q) return 0;
+            if (code.startsWith(q) || name.startsWith(q)) return 1;
+            return 2;
+          };
+          return score(a) - score(b);
+        });
+
+      const directRegionSlugs = new Set(directRegions.map((r) => r.slug));
+
+      // ── 2. Country matches (by name or ISO code) ───────────────────────────
+      const countries = allCountriesWithRegion
+        .filter(({ country }) => {
+          const nameMatch = country.name.toLowerCase().includes(q);
+          const codeMatch = country.code.toLowerCase().includes(q);
+          return nameMatch || codeMatch;
+        })
+        .sort((a, b) => {
+          const score = (c: Country) => {
+            const code = c.code.toLowerCase();
+            const name = c.name.toLowerCase();
+            if (code === q) return 0;
+            if (code.startsWith(q)) return 1;
+            if (name.startsWith(q)) return 2;
+            return 3;
+          };
+          return score(a.country) - score(b.country);
+        });
+
+      // ── 3. "Also available in…" — regions containing matched countries,
+      //       but exclude ones already directly matched ──────────────────────
+      const alsoInMap = new Map<string, Region>();
+      for (const { regionSlug } of countries) {
+        if (!directRegionSlugs.has(regionSlug) && !alsoInMap.has(regionSlug)) {
+          const region = regions.find((r) => r.slug === regionSlug);
+          if (region) alsoInMap.set(regionSlug, region);
+        }
       }
-    }
 
-    return {
-      matchedCountries: countries,
-      matchedRegions: [...regionMap.values()],
-    };
-  }, [query, allCountriesWithRegion, regions]);
+      return {
+        matchedCountries: countries,
+        directMatchedRegions: directRegions,
+        alsoInRegions: [...alsoInMap.values()],
+      };
+    }, [debouncedQuery, allCountriesWithRegion, regions]);
 
-  const hasQuery = query.trim().length > 0;
+  const hasQuery = debouncedQuery.trim().length > 0;
   const noResults =
-    hasQuery && matchedCountries.length === 0 && matchedRegions.length === 0;
+    hasQuery &&
+    matchedCountries.length === 0 &&
+    directMatchedRegions.length === 0 &&
+    alsoInRegions.length === 0;
 
   function navigate(path: string) {
     router.push(path);
     setOpen(false);
   }
 
-  // ── Shared inner content (same markup for both Dialog and Sheet) ──────────
+  // ── Region result card (reusable) ─────────────────────────────────────────
+  function RegionCard({ region }: { region: Region }) {
+    return (
+      <button
+        onClick={() => navigate(`/region/${region.slug}`)}
+        className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
+      >
+        <div className="relative h-6 w-8 shrink-0 overflow-hidden rounded">
+          <Image
+            src={region.flag}
+            alt={region.name}
+            fill
+            className="object-cover"
+          />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground">{region.name}</p>
+          <p className="text-[11px] text-muted-foreground">
+            Region · {region.countries?.length ?? 0} countries
+          </p>
+        </div>
+        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+      </button>
+    );
+  }
+
+  // ── Shared inner content (same markup for Dialog and Sheet) ───────────────
   const SearchContent = (
     <>
       {/* Search Input */}
@@ -131,7 +192,7 @@ export function SearchDialog({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Enter your destination or country code…"
+            placeholder="Country, region or code…"
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
           />
           {query && (
@@ -159,66 +220,68 @@ export function SearchDialog({
           </div>
         )}
 
-        {/* ── SEARCH RESULTS: countries first ── */}
+        {/* ── COUNTRY MATCHES — always shown first ── */}
         {hasQuery && matchedCountries.length > 0 && (
-          <ul>
-            {matchedCountries.map(({ country, regionName }) => (
-              <li key={country.id}>
-                <button
-                  onClick={() => navigate(`/${country.slug}`)}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
-                >
-                  <img
-                    src={country.flag}
-                    alt={country.name}
-                    className="h-6 w-8 shrink-0 rounded object-cover"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">
-                      {country.name}
-                    </p>
-                    <p className="text-[11px] text-muted-foreground">
-                      {regionName}
-                    </p>
-                  </div>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                </button>
-              </li>
-            ))}
-          </ul>
+          <div>
+            {directMatchedRegions.length > 0 && (
+              <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                Countries
+              </p>
+            )}
+            <ul>
+              {matchedCountries.map(({ country, regionName }) => (
+                <li key={country.id}>
+                  <button
+                    onClick={() => navigate(`/${country.slug}`)}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
+                  >
+                    <img
+                      src={country.flag}
+                      alt={country.name}
+                      className="h-6 w-8 shrink-0 rounded object-cover"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground">
+                        {country.name}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        {regionName}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
-        {/* ── SEARCH RESULTS: "Also available in…" regions ── */}
-        {hasQuery && matchedRegions.length > 0 && (
+        {/* ── DIRECT REGION MATCHES — shown below countries ── */}
+        {hasQuery && directMatchedRegions.length > 0 && (
+          <div>
+            <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Regions
+            </p>
+            <ul>
+              {directMatchedRegions.map((region) => (
+                <li key={region.id}>
+                  <RegionCard region={region} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* ── "ALSO AVAILABLE IN…" — regions containing matched countries ── */}
+        {hasQuery && alsoInRegions.length > 0 && (
           <div className="pt-1">
             <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               Also available in…
             </p>
             <ul>
-              {matchedRegions.map(({ region }) => (
+              {alsoInRegions.map((region) => (
                 <li key={region.id}>
-                  <button
-                    onClick={() => navigate(`/regions/${region.slug}`)}
-                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
-                  >
-                    <div className="flex h- w-8 shrink-0 items-center justify-center">
-                      <Image
-                        src={region.flag}
-                        alt={region.name}
-                        width={32}
-                        height={32}
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground">
-                        {region.name}
-                      </p>
-                      <p className="text-[11px] text-muted-foreground">
-                        Region · {region.countries?.length ?? 0} countries
-                      </p>
-                    </div>
-                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </button>
+                  <RegionCard region={region} />
                 </li>
               ))}
             </ul>
@@ -232,7 +295,7 @@ export function SearchDialog({
               Most popular destinations
             </p>
             <ul>
-              {popularCountries.slice(0, 8).map((country) => (
+              {popularCountries.map((country) => (
                 <li key={country.id}>
                   <button
                     onClick={() => navigate(`/${country.slug}`)}
