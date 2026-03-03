@@ -9,6 +9,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Country, Region } from "@/lib/types/plans.types";
 import Image from "next/image";
 import { Button } from "@base-ui/react";
@@ -43,7 +49,7 @@ export function SearchDialog({
   const router = useRouter();
   const isMobile = useIsMobile();
 
-  // Focus input when dialog opens
+  // Focus input when dialog/sheet opens
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 80);
@@ -65,16 +71,29 @@ export function SearchDialog({
     [regions],
   );
 
-  // Search: countries first, then unique regions that contain them
+  // Search: match by name OR country code (ISO), code startsWith gets priority
   const { matchedCountries, matchedRegions } = useMemo(() => {
     if (!query.trim()) return { matchedCountries: [], matchedRegions: [] };
-    const q = query.toLowerCase();
+    const q = query.trim().toLowerCase();
 
-    const countries = allCountriesWithRegion.filter(
-      ({ country }) =>
-        country.name.toLowerCase().includes(q) ||
-        country.code.toLowerCase().includes(q),
-    );
+    const countries = allCountriesWithRegion
+      .filter(({ country }) => {
+        const nameMatch = country.name.toLowerCase().includes(q);
+        const codeMatch = country.code.toLowerCase().includes(q);
+        return nameMatch || codeMatch;
+      })
+      .sort((a, b) => {
+        // Exact code match first, then code startsWith, then name startsWith, then rest
+        const score = (c: Country) => {
+          const code = c.code.toLowerCase();
+          const name = c.name.toLowerCase();
+          if (code === q) return 0;
+          if (code.startsWith(q)) return 1;
+          if (name.startsWith(q)) return 2;
+          return 3;
+        };
+        return score(a.country) - score(b.country);
+      });
 
     // Deduplicated regions from the matched countries
     const regionMap = new Map<string, MatchedRegion>();
@@ -99,6 +118,146 @@ export function SearchDialog({
     router.push(path);
     setOpen(false);
   }
+
+  // ── Shared inner content (same markup for both Dialog and Sheet) ──────────
+  const SearchContent = (
+    <>
+      {/* Search Input */}
+      <div className="px-5 pt-3 pb-2 shrink-0">
+        <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 py-2.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all">
+          <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Enter your destination or country code…"
+            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="rounded-md p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Results */}
+      <div className="flex-1 overflow-y-auto px-3 pb-4">
+        {/* ── NO RESULTS ── */}
+        {noResults && (
+          <div className="flex flex-col items-center gap-1 py-2 text-center">
+            <p className="flex items-center gap-2 text-sm font-semibold text-foreground mt-3">
+              <Ban className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <span className="text-muted-foreground">
+                Nothing matches your search
+              </span>
+            </p>
+          </div>
+        )}
+
+        {/* ── SEARCH RESULTS: countries first ── */}
+        {hasQuery && matchedCountries.length > 0 && (
+          <ul>
+            {matchedCountries.map(({ country, regionName }) => (
+              <li key={country.id}>
+                <button
+                  onClick={() => navigate(`/${country.slug}`)}
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
+                >
+                  <img
+                    src={country.flag}
+                    alt={country.name}
+                    className="h-6 w-8 shrink-0 rounded object-cover"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">
+                      {country.name}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {regionName}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* ── SEARCH RESULTS: "Also available in…" regions ── */}
+        {hasQuery && matchedRegions.length > 0 && (
+          <div className="pt-1">
+            <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Also available in…
+            </p>
+            <ul>
+              {matchedRegions.map(({ region }) => (
+                <li key={region.id}>
+                  <button
+                    onClick={() => navigate(`/regions/${region.slug}`)}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
+                  >
+                    <div className="flex h- w-8 shrink-0 items-center justify-center">
+                      <Image
+                        src={region.flag}
+                        alt={region.name}
+                        width={32}
+                        height={32}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground">
+                        {region.name}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">
+                        Region · {region.countries?.length ?? 0} countries
+                      </p>
+                    </div>
+                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {/* ── POPULAR DESTINATIONS (default or after no-results) ── */}
+        {(!hasQuery || noResults) && (
+          <div>
+            <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+              Most popular destinations
+            </p>
+            <ul>
+              {popularCountries.slice(0, 8).map((country) => (
+                <li key={country.id}>
+                  <button
+                    onClick={() => navigate(`/${country.slug}`)}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
+                  >
+                    <img
+                      src={country.flag}
+                      alt={country.name}
+                      className="h-6 w-8 shrink-0 rounded object-cover"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground">
+                        {country.name}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </>
+  );
 
   return (
     <>
@@ -130,151 +289,37 @@ export function SearchDialog({
         </Button>
       )}
 
-      {/* ── Dialog ──────────────────────────────────────────── */}
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[540px] h-[540px] md:max-w-[640px]! p-0 gap-0 flex flex-col overflow-hidden rounded-2xl border-border shadow-2xl">
-          <DialogHeader className="px-5 pt-5 pb-0">
-            <DialogTitle className="text-lg font-bold text-foreground">
-              Where?
-            </DialogTitle>
-          </DialogHeader>
+      {/* ── Mobile: bottom Sheet (full height) ───────────────── */}
+      {isMobile && (
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetContent
+            side="bottom"
+            showCloseButton={true}
+            className="h-[95dvh] rounded-t-2xl border-border p-0 gap-0 flex flex-col overflow-hidden"
+          >
+            <SheetHeader className="px-5 pt-5 pb-0">
+              <SheetTitle className="text-lg font-bold pb-8 text-foreground">
+                Where?
+              </SheetTitle>
+            </SheetHeader>
+            {SearchContent}
+          </SheetContent>
+        </Sheet>
+      )}
 
-          {/* Search Input */}
-          <div className="px-5 pt-3 pb-2 shrink-0">
-            <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 py-2.5 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 transition-all">
-              <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-              <input
-                ref={inputRef}
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Enter your destination"
-                className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
-              />
-              {query && (
-                <button
-                  onClick={() => setQuery("")}
-                  className="rounded-md p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Results */}
-          <div className="flex-1 overflow-y-auto px-3 pb-4">
-            {/* ── NO RESULTS ── */}
-            {noResults && (
-              <div className="flex flex-col items-center gap-1 py-2 text-center">
-                <p className="flex items-center gap-2 text-sm font-semibold text-foreground mt-3">
-                  <Ban className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span className="text-muted-foreground">
-                    Nothing matches your search
-                  </span>
-                </p>
-              </div>
-            )}
-
-            {/* ── SEARCH RESULTS: countries first ── */}
-            {hasQuery && matchedCountries.length > 0 && (
-              <ul>
-                {matchedCountries.map(({ country, regionName }) => (
-                  <li key={country.id}>
-                    <button
-                      onClick={() => navigate(`/${country.slug}`)}
-                      className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
-                    >
-                      <img
-                        src={country.flag}
-                        alt={country.name}
-                        className="h-6 w-8 shrink-0 rounded object-cover"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground">
-                          {country.name}
-                        </p>
-                        <p className="text-[11px] text-muted-foreground">
-                          {regionName}
-                        </p>
-                      </div>
-                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* ── SEARCH RESULTS: "Also available in…" regions ── */}
-            {hasQuery && matchedRegions.length > 0 && (
-              <div className="pt-1">
-                <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Also available in…
-                </p>
-                <ul>
-                  {matchedRegions.map(({ region }) => (
-                    <li key={region.id}>
-                      <button
-                        onClick={() => navigate(`/regions/${region.slug}`)}
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
-                      >
-                        <div className="flex h- w-8 shrink-0 items-center justify-center">
-                          <Image
-                            src={region.flag}
-                            alt={region.name}
-                            width={32}
-                            height={32}
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground">
-                            {region.name}
-                          </p>
-                          <p className="text-[11px] text-muted-foreground">
-                            Region · {region.countries?.length ?? 0} countries
-                          </p>
-                        </div>
-                        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* ── POPULAR DESTINATIONS (default or after no-results) ── */}
-            {(!hasQuery || noResults) && (
-              <div>
-                <p className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  Most popular destinations
-                </p>
-                <ul>
-                  {popularCountries.map((country) => (
-                    <li key={country.id}>
-                      <button
-                        onClick={() => navigate(`/${country.slug}`)}
-                        className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
-                      >
-                        <img
-                          src={country.flag}
-                          alt={country.name}
-                          className="h-6 w-8 shrink-0 rounded object-cover"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-foreground">
-                            {country.name}
-                          </p>
-                        </div>
-                        <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50 -translate-x-1 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* ── Desktop: Dialog (md and above) ───────────────────── */}
+      {!isMobile && (
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogContent className="sm:max-w-[540px] h-[540px] md:max-w-[640px]! p-0 gap-0 flex flex-col overflow-hidden rounded-2xl border-border shadow-2xl">
+            <DialogHeader className="px-5 pt-5 pb-0">
+              <DialogTitle className="text-lg font-bold text-foreground">
+                Where?
+              </DialogTitle>
+            </DialogHeader>
+            {SearchContent}
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }
