@@ -17,7 +17,7 @@ export default function GlobalRegionCard({
   return (
     <Link
       href={href}
-      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/30"
+      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/40"
     >
       <div className="relative h-12 w-12 shrink-0 flex items-center justify-center">
         <Image src={globe} alt="globe" fill className="object-cover" />

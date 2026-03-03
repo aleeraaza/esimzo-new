@@ -38,7 +38,7 @@ export default function Navbar({ searchSlot, mobileMenuSlot }: NavbarProps) {
   }, []);
 
   const routeBg = useMemo(() => {
-    if (pathname === "/") return "bg-secondary/40";
+    if (pathname === "/") return "bg-secondary/80";
     if (pathname === "/global") return "bg-secondary/40";
     if (pathname === "/region") return "bg-secondary/10";
     if (pathname.split("/").filter(Boolean).length === 1) {

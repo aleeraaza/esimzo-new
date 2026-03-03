@@ -33,7 +33,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex min-h-screen flex-col`}
       >
-        <NextTopLoader color="#F47854" height={3} />
+        <NextTopLoader color="#F47854" showSpinner={false} />
         <QueryProvider>
           <NuqsAdapter>
             <NavWrapper />

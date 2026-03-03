@@ -235,9 +235,11 @@ export function SearchDialog({
                     onClick={() => navigate(`/${country.slug}`)}
                     className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
                   >
-                    <img
+                    <Image
                       src={country.flag}
                       alt={country.name}
+                      width={32}
+                      height={32}
                       className="h-6 w-8 shrink-0 rounded object-cover"
                     />
                     <div className="flex-1 min-w-0">
@@ -295,15 +297,17 @@ export function SearchDialog({
               Most popular destinations
             </p>
             <ul>
-              {popularCountries.map((country) => (
+              {popularCountries.slice(0, 10).map((country) => (
                 <li key={country.id}>
                   <button
                     onClick={() => navigate(`/${country.slug}`)}
                     className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left hover:bg-muted group transition-colors"
                   >
-                    <img
+                    <Image
                       src={country.flag}
                       alt={country.name}
+                      width={32}
+                      height={32}
                       className="h-6 w-8 shrink-0 rounded object-cover"
                     />
                     <div className="flex-1 min-w-0">
@@ -358,7 +362,7 @@ export function SearchDialog({
           <SheetContent
             side="bottom"
             showCloseButton={true}
-            className="h-[95dvh] rounded-t-2xl border-border p-0 gap-0 flex flex-col overflow-hidden"
+            className="h-[98dvh] rounded-t-4xl border-border p-0 gap-0 flex flex-col overflow-hidden"
           >
             <SheetHeader className="px-5 pt-5 pb-0">
               <SheetTitle className="text-lg font-bold pb-8 text-foreground">

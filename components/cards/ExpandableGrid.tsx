@@ -28,7 +28,7 @@ export default function ExpandableGrid({
             /* All cards stay in the DOM for SEO — just clip the overflow */
             maxHeight: expanded
               ? "none"
-              : `${Math.ceil(visibleCount / 3) * 100}px`,
+              : `${(Math.ceil(visibleCount) / 3) * 100}px`,
             overflow: "hidden",
             transition: "max-height 0.4s ease-in-out",
           }}

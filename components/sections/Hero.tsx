@@ -1,28 +1,22 @@
 import Link from "next/link";
-import { Zap, Wifi, Shield } from "lucide-react";
 import ConfusedPeopleSVG from "./ConfusedPeopleSVG";
 import SearchList from "@/components/search/SearchList";
 
 const popularDestinations = [
-  { flag: "🇫🇷", name: "France" },
-  { flag: "🇪🇸", name: "Spain" },
-  { flag: "🇺🇸", name: "USA" },
-  { flag: "🇯🇵", name: "Japan" },
-  { flag: "🇬🇧", name: "UK" },
-  { flag: "🇦🇪", name: "UAE" },
-];
-
-const badges = [
-  { icon: Zap, label: "Instant Activation" },
-  { icon: Wifi, label: "190+ Countries" },
-  { icon: Shield, label: "No Hidden Fees" },
+  { flag: "🇫🇷", name: "France", link: "/france/" },
+  { flag: "🇪🇸", name: "Spain", link: "/spain/" },
+  { flag: "🇺🇸", name: "USA", link: "/united-states/" },
+  { flag: "🇯🇵", name: "Japan", link: "/japan/" },
+  { flag: "🇬🇧", name: "UK", link: "/united-kingdom/" },
+  { flag: "🇦🇪", name: "UAE", link: "/united-arab-emirates/" },
+  { flag: "🇹🇷", name: "Turkey", link: "/turkey/" },
 ];
 
 export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative overflow-hidden bg-gradient-to-b from-secondary/40 via-secondary/40 to-background py-10"
+      className="relative overflow-hidden bg-gradient-to-b from-secondary/80 via-secondary/60 to-background py-10"
     >
       <div className="container relative">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -55,13 +49,12 @@ export default function Hero() {
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="text-xs text-muted-foreground">Popular:</span>
                 {popularDestinations.map((d) => (
-                  <button
-                    key={d.name}
-                    id={`hero-tag-${d.name.toLowerCase()}`}
-                    className="flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-0.5 text-xs font-medium text-card-foreground transition-all hover:border-ring hover:bg-secondary hover:text-primary"
+                  <Link
+                    href={d.link}
+                    className="flex items-center gap-1 rounded-full border border-border bg-card px-4 py-1 text-xs font-medium text-card-foreground transition-all hover:bg-secondary/40 hover:text-primary"
                   >
-                    <span>{d.flag}</span> {d.name}
-                  </button>
+                    {d.name}
+                  </Link>
                 ))}
               </div>
             </div>

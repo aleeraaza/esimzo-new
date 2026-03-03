@@ -1,8 +1,8 @@
-import { getCountries } from "@/lib/services/plans/plans.services";
+import { getPopularCountries } from "@/lib/services/plans/plans.services";
 import CountryCard from "../cards/CountryCard";
 
 export default async function CountriesSection() {
-  const popularCountries = await getCountries();
+  const popularCountries = await getPopularCountries();
 
   return (
     <section id="destinations" className="py-10">

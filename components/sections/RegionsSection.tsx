@@ -5,7 +5,7 @@ import RegionCard from "../cards/RegionCard";
 import GlobalRegionCard from "../cards/GlobalRegionCard";
 import Image from "next/image";
 
-const VISIBLE_COUNT = 15;
+const VISIBLE_COUNT = 10;
 
 export default async function RegionsSection() {
   const regions = await getRegions();

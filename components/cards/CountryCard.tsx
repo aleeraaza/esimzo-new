@@ -13,7 +13,7 @@ export default function CountryCard({ country }: PropType) {
   return (
     <Link
       href={slug}
-      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/30"
+      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/40"
     >
       <div className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md border border-border/40 bg-background">
         <Image

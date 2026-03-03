@@ -13,7 +13,7 @@ export default function RegionCard({ region }: PropType) {
   return (
     <Link
       href={`/region/${slug}`}
-      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/30"
+      className="group relative flex items-center gap-4 rounded-2xl border border-border bg-secondary/20 p-4 hover:bg-secondary/40"
     >
       {/* Flag Container */}
       <div className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md">
