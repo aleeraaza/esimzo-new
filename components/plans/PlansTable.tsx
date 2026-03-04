@@ -117,8 +117,8 @@ export default function PlansTable({
                 <Link
                   href={
                     isRegional
-                      ? `/region/${slug}/${plan.provider.slug}`
-                      : `/${slug}/${plan.provider.slug}`
+                      ? `/region/${slug}/${plan.provider.slug}-provider`
+                      : `/${slug}/${plan.provider.slug}-provider`
                   }
                 >
                   <div className="flex items-center gap-3">
@@ -163,8 +163,8 @@ export default function PlansTable({
                 <Link
                   href={
                     isRegional
-                      ? `/region/${slug}/${plan.provider.slug}`
-                      : `/${slug}/${plan.provider.slug}`
+                      ? `/region/${slug}/${plan.provider.slug}-provider`
+                      : `/${slug}/${plan.provider.slug}-provider`
                   }
                 >
                   <div className="flex items-center gap-1">
@@ -180,8 +180,8 @@ export default function PlansTable({
                 <Link
                   href={
                     isRegional
-                      ? `/region/${slug}/${plan.provider.slug}`
-                      : `/${slug}/${plan.provider.slug}`
+                      ? `/region/${slug}/${plan.provider.slug}-provider`
+                      : `/${slug}/${plan.provider.slug}-provider`
                   }
                 >
                   <div className="flex items-center gap-1">
@@ -211,8 +211,8 @@ export default function PlansTable({
                 <Link
                   href={
                     isRegional
-                      ? `/region/${slug}/${plan.provider.slug}`
-                      : `/${slug}/${plan.provider.slug}`
+                      ? `/region/${slug}/${plan.provider.slug}-provider`
+                      : `/${slug}/${plan.provider.slug}-provider`
                   }
                 >
                   <span className="text-sm font-medium text-muted-foreground">
@@ -226,8 +226,8 @@ export default function PlansTable({
                 <Link
                   href={
                     isRegional
-                      ? `/region/${slug}/${plan.provider.slug}`
-                      : `/${slug}/${plan.provider.slug}`
+                      ? `/region/${slug}/${plan.provider.slug}-provider`
+                      : `/${slug}/${plan.provider.slug}-provider`
                   }
                 >
                   <span
@@ -248,8 +248,8 @@ export default function PlansTable({
                 <Link
                   href={
                     isRegional
-                      ? `/region/${slug}/${plan.provider.slug}`
-                      : `/${slug}/${plan.provider.slug}`
+                      ? `/region/${slug}/${plan.provider.slug}-provider`
+                      : `/${slug}/${plan.provider.slug}-provider`
                   }
                 >
                   <div className="flex flex-wrap gap-1">

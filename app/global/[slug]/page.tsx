@@ -9,7 +9,10 @@ type PropType = {
 
 export default async function page({ params }: PropType) {
   const { slug } = await params;
-  const { data, provider: providerData } = await getGlobalPackagesBySlug(slug);
+  const cleanProviderSlug = slug.replace("-provider", "");
+
+  const { data, provider: providerData } =
+    await getGlobalPackagesBySlug(cleanProviderSlug);
 
   return (
     <main className="container py-8 flex flex-col gap-8">
