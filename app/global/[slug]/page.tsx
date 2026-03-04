@@ -17,7 +17,10 @@ export default async function page({ params }: PropType) {
   return (
     <main className="container py-8 flex flex-col gap-8">
       {/* Header spanning full width */}
-      <ProviderPackageHeader providerName={slug} countryName={"Global"} />
+      <ProviderPackageHeader
+        providerName={cleanProviderSlug}
+        countryName={"Global"}
+      />
 
       {/* Main Grid Content */}
       <section className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-8 items-start">
