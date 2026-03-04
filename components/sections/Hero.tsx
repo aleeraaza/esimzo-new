@@ -50,6 +50,7 @@ export default function Hero() {
                 <span className="text-xs text-muted-foreground">Popular:</span>
                 {popularDestinations.map((d) => (
                   <Link
+                    key={d.name}
                     href={d.link}
                     className="flex items-center gap-1 rounded-full border border-border bg-card px-4 py-1 text-xs font-medium text-card-foreground transition-all hover:bg-secondary/40 hover:text-primary"
                   >
