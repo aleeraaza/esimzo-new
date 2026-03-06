@@ -11,7 +11,7 @@ export async function getCountries() {
     return response.data;
   } catch (error) {
     console.error("Error fetching all countries:", error);
-    return [];
+    throw error;
   }
 }
 export async function getPopularCountries() {
@@ -20,7 +20,7 @@ export async function getPopularCountries() {
     return response.data;
   } catch (error) {
     console.error("Error fetching popular countries:", error);
-    return [];
+    throw error;
   }
 }
 
@@ -30,7 +30,7 @@ export async function getRegions() {
     return response.data;
   } catch (error) {
     console.error("Error fetching regions:", error);
-    return [];
+    throw error;
   }
 }
 
@@ -42,7 +42,7 @@ export async function getCountryPackagesBySlug(slug: string) {
     return response.data || [];
   } catch (error) {
     console.error(`Error fetching country packages for slug ${slug}:`, error);
-    return [];
+    throw error;
   }
 }
 
@@ -52,7 +52,7 @@ export async function getRegionalPackagesBySlug(slug: string) {
     return response.data || [];
   } catch (error) {
     console.error(`Error fetching regional packages for slug ${slug}:`, error);
-    return [];
+    throw error;
   }
 }
 export async function getRegionalPackagesByProvider(
@@ -69,7 +69,7 @@ export async function getRegionalPackagesByProvider(
       `Error fetching regional packages for slug ${regionSlug} and provider ${providerSlug}:`,
       error,
     );
-    return { data: [], provider: null };
+    throw error;
   }
 }
 
@@ -79,7 +79,7 @@ export async function getGlobalPackages() {
     return response.data || [];
   } catch (error) {
     console.error(`Error fetching global packages:`, error);
-    return [];
+    throw error;
   }
 }
 
@@ -91,7 +91,7 @@ export async function getGlobalPackagesBySlug(slug: string) {
     return { data: response.data, provider: response.provider };
   } catch (error) {
     console.error(`Error fetching global packages:`, error);
-    return { data: [], provider: null };
+    throw error;
   }
 }
 
@@ -106,6 +106,6 @@ export async function getProviderBySearchParams(
     return { data: response.data, provider: response.provider };
   } catch (error) {
     console.error(`Error fetching provider by search params:`, error);
-    return { data: [], provider: null };
+    throw error;
   }
 }

@@ -12,11 +12,7 @@ import {
 } from "../ui/dropdown-menu";
 import { PromoCodeCard } from "./PromoCodeCard";
 
-export const ProviderDetails = ({
-  provider,
-}: {
-  provider: Provider | null;
-}) => {
+export const ProviderDetails = ({ provider }: { provider: Provider }) => {
   return (
     <div className="flex flex-col gap-4">
       <section className="w-full rounded-3xl border border-border bg-card p-6 shadow-sm">
@@ -24,10 +20,10 @@ export const ProviderDetails = ({
           {/* Logo and Title Group */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             <div className="relative h-20 w-20 overflow-hidden rounded-2xl border border-border bg-muted p-2 shadow-inner">
-              {provider?.image && (
+              {provider.image && (
                 <Image
-                  src={provider?.image}
-                  alt={provider?.name}
+                  src={provider.image}
+                  alt={provider.name}
                   width={100}
                   height={100}
                   className="h-full w-full object-contain rounded-md"
@@ -38,12 +34,12 @@ export const ProviderDetails = ({
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <h1 className="text-3xl font-bold tracking-tight text-foreground">
-                  {provider?.name}
+                  {provider.name}
                 </h1>
                 <BadgeCheck className="text-primary h-6 w-6 fill-primary/10" />
               </div>
               <p className="text-sm font-medium text-secondary-foreground uppercase tracking-wide">
-                {provider?.certified ? "Verified Provider" : ""}
+                {provider.certified ? "Verified Provider" : ""}
               </p>
             </div>
           </div>
@@ -51,13 +47,13 @@ export const ProviderDetails = ({
           {/* Description Section */}
           <div className="space-y-4">
             <p className="text-lg leading-relaxed text-muted-foreground">
-              {provider?.info}
+              {provider.info}
             </p>
           </div>
 
-          {provider?.providerLinks.length === 0 ? (
+          {provider.providerLinks.length === 0 ? (
             <></>
-          ) : provider?.providerLinks.length === 1 ? (
+          ) : provider.providerLinks.length === 1 ? (
             <Button className="w-full px-6 py-6 text-base font-bold rounded-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all hover:scale-[1.01] active:scale-[0.99] border-none! cursor-pointer ring-0!">
               <Link
                 href={provider.providerLinks[0].link}
@@ -85,7 +81,7 @@ export const ProviderDetails = ({
                 sideOffset={8}
                 className="w-(--radix-dropdown-menu-trigger-width) p-2 rounded-2xl border border-border bg-popover shadow-lg flex flex-col gap-1.5"
               >
-                {provider?.providerLinks.map((item, index) => (
+                {provider.providerLinks.map((item, index) => (
                   <DropdownMenuItem
                     key={index}
                     asChild
@@ -114,7 +110,7 @@ export const ProviderDetails = ({
       </section>
 
       <div>
-        {provider?.promoCode && (
+        {provider.promoCode && (
           <PromoCodeCard
             code={provider.promoCode}
             title={provider.promoTitle}

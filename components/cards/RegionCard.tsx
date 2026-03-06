@@ -38,11 +38,8 @@ export default function RegionCard({ region }: PropType) {
           </p>
         </div>
       </div>
-      <div className="rounded-full bg-muted group-hover:bg-primary p-1">
-        <ChevronRight
-          size={18}
-          className="text-muted-foreground transition-all group-hover:text-background"
-        />
+      <div className="rounded-full bg-primary p-1">
+        <ChevronRight size={18} className="text-background" />
       </div>
     </Link>
   );
